@@ -2,7 +2,9 @@ package com.epam.latysheva;
 
 
 import com.epam.latysheva.page.*;
+import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.Assert;
@@ -10,6 +12,7 @@ import org.testng.annotations.AfterTest;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
 
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -131,14 +134,18 @@ public class SimpleTest {
          * Check that email count is increased by 1
          */
         inboxPage = mailBoxPage.openInbox();
+        List<WebElement> list = driver.findElements(By.xpath("//*[@class=\"js-href b-datalist__item__link\"]"));
         int newEmailCount = inboxPage.setEmailCount();
+        list = driver.findElements(By.xpath("//*[@class=\"js-href b-datalist__item__link\"]"));
+        int e=inboxPage.getInitialEmailCount();
         Assert.assertEquals(newEmailCount - inboxPage.getInitialEmailCount(), 1, CHECK_EMAIL_COUNT_INCREASE_MSG);
         /**
          * Check that email is deleted
          */
         inboxPage.selectRecievedEmail();
         inboxPage.clickDelete();
-        Assert.assertTrue(inboxPage.isEmailDeleted());
+        boolean tmp = inboxPage.isEmailDeleted();
+        Assert.assertTrue(tmp);
         /**
          * Refresh the page and check that email count hasn't been changed
          */
