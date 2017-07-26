@@ -28,6 +28,15 @@ public class Page {
     protected static final By COMPOSE_BUTTON = By.cssSelector("a[data-name='compose']");
     protected static final By SEND_BUTTON = By.xpath("//*[@data-name=\"send\"]");
     protected static final By DELETE_BUTTON = By.xpath("//*[@data-name=\"remove\"]");
+    //protected static final By MOVE_BUTTON=By.xpath("//*[contains(@data-title,\"Переместить\")]");
+
+
+    protected static final By MOVE_BUTTON=By.xpath("//div[@style=\"\"]//*[@data-shortcut-title=\"V\"]");
+
+    protected static final By TRASH_MENU_ITEM = By.xpath("//div[@style=\"\"]//a[@data-text=\"Корзина\"]");
+
+
+
     protected static final By TO_FIELD = By.xpath("//textarea[@data-original-name=\"To\"]");
     protected static final By SUBJECT_FIELD = By.name("Subject");
     protected static final By BODY_FIELD_IFRAME = By.xpath("//iframe[contains(@id, 'composeEditor')]");
@@ -38,15 +47,17 @@ public class Page {
     protected static final By DRAFT_LINK = By.cssSelector("a[href='/messages/drafts/']");
     protected static final By SENT_LINK = By.cssSelector("a[href='/messages/sent/']");
     protected static final By INBOX_LINK = By.cssSelector("a[href='/messages/inbox/']");
+    protected static final By TRASH_LINK = By.cssSelector("a[href='/messages/trash/']");
     protected static final String EMAIL = "//a[@data-subject=\"" + EMAIL_DETAILS_SUBJ + "\" and contains(@title,\"" + EMAIL_DETAILS_TO + "\")]//span[@title=\"Сегодня, ";
     protected static final String PART_EMAIL_LOCATOR = "//a[@class=\"js-href b-datalist__item__link\" and @data-subject=\"" + EMAIL_DETAILS_SUBJ + "\" and contains(@title,\"" + EMAIL_DETAILS_TO + "\")]";
-    protected static final String EMAIL_CHECKBOX = PART_EMAIL_LOCATOR + "//div[@class=\" b-checkbox__box\" ]";
+    protected static final String EMAIL_CHECKBOX = PART_EMAIL_LOCATOR + "//div[@class=\"b-checkbox__box\"]";
     protected static final String EMAIL_TIME = PART_EMAIL_LOCATOR+"//span[contains(@title,\"Сегодня\")]";
     protected static final By LOGOUT_LINK = By.id("PH_logoutLink");
     protected static final By COMPOSE_EDITOR_IFRAME = By.xpath("//iframe[contains(@id, 'composeEditor')]");
     protected static final By COMPOSE_EDITOR = By.id("tinymce");
     protected static final By DELETE_EMAIL_CONFIRM_MESSAGE = By.className("js-txt _js-title notify-message__title__text notify-message__title__text_ok");
     //.//*[@class="notify-message__title"]/span[@class="js-txt _js-title notify-message__title__text notify-message__title__text_ok"]
+    protected static final By SENT_EMAIL_CONFIRMATION = By.id("b-compose__sent");
 
     public Page(WebDriver driver) {
         this.driver = driver;

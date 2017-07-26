@@ -82,4 +82,7 @@ public class ComposePage extends MailBoxPage {
         return new MailBoxPage(driver);
     }
 
+    public void waitEmailSent(){
+        waitForElementPresents(SENT_EMAIL_CONFIRMATION);
+    }
 }

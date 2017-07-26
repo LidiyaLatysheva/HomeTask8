@@ -35,7 +35,13 @@ public class MailBoxPage extends Page {
         return new InboxPage(driver);
     }
 
+    public TrashPage openTrash() {
+        driver.findElement(TRASH_LINK).click();
+        return new TrashPage(driver);
+    }
+
     public boolean isEmailSent() {
+        waitForElementEnabled(SENT_EMAIL_CONFIRMATION);
         String currentURL = driver.getCurrentUrl();
         return currentURL.contains(SENT_OK_URL);
     }
@@ -67,5 +73,13 @@ public class MailBoxPage extends Page {
             emailTimeList.add(i, driver.findElements(By.xpath(EMAIL_TIME)).get(i).getText());
         }
         return emailTimeList;
+    }
+
+    public MailBoxPage clickMoveToTrash() {
+        boolean tmp =driver.findElement(MOVE_BUTTON).isDisplayed();
+        if (driver.findElement(MOVE_BUTTON).isDisplayed()){
+        driver.findElement(MOVE_BUTTON).click();
+        driver.findElement(TRASH_MENU_ITEM).click();}
+        return this;
     }
 }

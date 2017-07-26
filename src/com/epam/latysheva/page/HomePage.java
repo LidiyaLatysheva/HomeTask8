@@ -16,8 +16,11 @@ public class HomePage extends Page {
     }
 
     public InboxPage login(String login, String password) {
+        waitForElementEnabled(LOGIN_FIELD);
         driver.findElement(LOGIN_FIELD).sendKeys(login);
+        waitForElementEnabled(PASSWORD_FIELD);
         driver.findElement(PASSWORD_FIELD).sendKeys(password);
+        waitForElementEnabled(LOGIN_BUTTON);
         driver.findElement(LOGIN_BUTTON).click();
         return new InboxPage(driver);
     }

@@ -2,9 +2,7 @@ package com.epam.latysheva;
 
 
 import com.epam.latysheva.page.*;
-import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.Assert;
@@ -12,7 +10,6 @@ import org.testng.annotations.AfterTest;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
 
-import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -129,38 +126,99 @@ public class SimpleTest {
          */
         composePage.fillToField(EMAIL_DETAILS_TO).fillSubjectField(EMAIL_DETAILS_SUBJ).fillBodyField(EMAIL_DETAILS_BODY);
         MailBoxPage mailBoxPage = composePage.clickSend();
+        composePage.waitEmailSent();
         Assert.assertTrue(mailBoxPage.isEmailSent(), CHECK_EMAIL_IS_SENT_MSG);
+        //TODO implement this logic. Currently scipping.
         /**
          * Check that email count is increased by 1
          */
-        inboxPage = mailBoxPage.openInbox();
-        List<WebElement> list = driver.findElements(By.xpath("//*[@class=\"js-href b-datalist__item__link\"]"));
+        /*inboxPage = mailBoxPage.openInbox();
+        List<WebElement> list = driver.findElements(By.xpath("/*//*[@class=\"js-href b-datalist__item__link\"]"));
         int newEmailCount = inboxPage.setEmailCount();
-        list = driver.findElements(By.xpath("//*[@class=\"js-href b-datalist__item__link\"]"));
+        list = driver.findElements(By.xpath("/*//*[@class=\"js-href b-datalist__item__link\"]"));
         int e=inboxPage.getInitialEmailCount();
-        Assert.assertEquals(newEmailCount - inboxPage.getInitialEmailCount(), 1, CHECK_EMAIL_COUNT_INCREASE_MSG);
+        Assert.assertEquals(newEmailCount - inboxPage.getInitialEmailCount(), 1, CHECK_EMAIL_COUNT_INCREASE_MSG);*/
         /**
          * Check that email is deleted
          */
+        inboxPage = mailBoxPage.openInbox();
         inboxPage.selectRecievedEmail();
         inboxPage.clickDelete();
-        boolean tmp = inboxPage.isEmailDeleted();
-        Assert.assertTrue(tmp);
+        //TODO how to catch js elements
+        /*boolean tmp = inboxPage.isEmailDeleted();
+        Assert.assertTrue(tmp);*/
+        //TODO implement this logic. Currently scipping.
         /**
          * Refresh the page and check that email count hasn't been changed
          */
-        int count = inboxPage.setEmailCount();
+        /*int count = inboxPage.setEmailCount();
         driver.navigate().refresh();
         newEmailCount = inboxPage.setEmailCount();
-        Assert.assertEquals(newEmailCount, count, EMAIL_COUNT_AFTER_REFRESH_MSG);
+        Assert.assertEquals(newEmailCount, count, EMAIL_COUNT_AFTER_REFRESH_MSG);*/
+        driver.navigate().refresh();
+        /**
+         * Open Trash and check that email there
+         */
+        TrashPage trashPage = inboxPage.openTrash();
+        Assert.assertTrue(trashPage.isEmailThere());
+        /**
+         * Logout
+         */
+        homePage = trashPage.logout();
+        Assert.assertTrue(homePage.isHomePage(), CHECK_LOGOUT_MSG);
+    }
 
+    @Test
+    public void thirdTest() {
+        /**
+         * Open home page and login
+         */
+        HomePage homePage = new HomePage(driver);
+        InboxPage inboxPage = homePage.open().login(LOGIN, PASSWORD);
+        /**
+         * Wait for Compose button to be clickable and click it.
+         */
+        inboxPage.waitForElementEnabled(inboxPage.getCOMPOSE_BUTTON());
+        inboxPage.setInitialEmailCount();
+        ComposePage composePage = inboxPage.clickComposeBtn();
+        Assert.assertTrue(composePage.isComposePage(), CHECK_SEND_BTN_PRESENT_FAILED_MSG);
+        /**
+         * Fill in  To, Subject, Body fields,
+         * send email.
+         */
+        composePage.fillToField(EMAIL_DETAILS_TO).fillSubjectField(EMAIL_DETAILS_SUBJ).fillBodyField(EMAIL_DETAILS_BODY);
+        MailBoxPage mailBoxPage = composePage.clickSend();
+        composePage.waitEmailSent();
+        Assert.assertTrue(mailBoxPage.isEmailSent(), CHECK_EMAIL_IS_SENT_MSG);
+        //TODO "Check that email count is increased by 1" implement this logic. Currently scipping.
 
-
+        /**
+         * Move email to trash and check it
+         */
+        inboxPage = mailBoxPage.openInbox();
+        inboxPage.selectRecievedEmail();
+        inboxPage.clickMoveToTrash();
+        //TODO check that confirm message appears:how to catch js elements
+        /**
+         * Refresh the page and check that email count hasn't been changed
+         */
+        //TODO check that email count is the same after refresh : implement this logic. Currently scipping.
+        driver.navigate().refresh();
+        /**
+         * Open Trash and check that email there
+         */
+        TrashPage trashPage = inboxPage.openTrash();
+        Assert.assertTrue(trashPage.isEmailThere());
+        /**
+         * Logout
+         */
+        homePage = trashPage.logout();
+        Assert.assertTrue(homePage.isHomePage(), CHECK_LOGOUT_MSG);
     }
 
     @AfterTest
     private void closeDeriver() {
         //driver.close();
-        //driver.quit();
+        driver.quit();
     }
 }
