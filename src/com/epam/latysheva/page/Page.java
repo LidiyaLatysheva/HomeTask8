@@ -55,8 +55,7 @@ public class Page {
     protected static final By LOGOUT_LINK = By.id("PH_logoutLink");
     protected static final By COMPOSE_EDITOR_IFRAME = By.xpath("//iframe[contains(@id, 'composeEditor')]");
     protected static final By COMPOSE_EDITOR = By.id("tinymce");
-    protected static final By DELETE_EMAIL_CONFIRM_MESSAGE = By.className("js-txt _js-title notify-message__title__text notify-message__title__text_ok");
-    //.//*[@class="notify-message__title"]/span[@class="js-txt _js-title notify-message__title__text notify-message__title__text_ok"]
+    protected static final By DELETE_MOVE_EMAIL_CONFIRM_MESSAGE = By.xpath(".//div[@style=\"\"]//div[@class=\"notify-message__title\"]//span[@class='js-txt _js-title notify-message__title__text notify-message__title__text_ok']");
     protected static final By SENT_EMAIL_CONFIRMATION = By.id("b-compose__sent");
 
     public Page(WebDriver driver) {
@@ -72,7 +71,9 @@ public class Page {
     }
 
     public void waitForElementVisible(By locator){
+        locator = By.xpath(".//div[@style=\"\"]//div[@class=\"notify-message__title\"]//span[@class='js-txt _js-title notify-message__title__text notify-message__title__text_ok']");
         new WebDriverWait(driver, WAIT_CONST).until(ExpectedConditions.visibilityOfElementLocated(locator));
+
     }
 
 }

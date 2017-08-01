@@ -47,10 +47,8 @@ public class InboxPage extends MailBoxPage {
     }
 
     public InboxPage selectRecievedEmail(){
-        //receivedTime = driver.findElements(By.xpath(EMAIL_TIME)).get(0).getText();
         String tmp = EMAIL_CHECKBOX;
         driver.findElement(By.xpath(tmp)).click();
-        //driver.findElements(By.xpath(EMAIL_CHECKBOX)).get(0).click();
         return this;
     }
 
@@ -64,5 +62,7 @@ public class InboxPage extends MailBoxPage {
             return false;
         }
     }
+
+
 }
 

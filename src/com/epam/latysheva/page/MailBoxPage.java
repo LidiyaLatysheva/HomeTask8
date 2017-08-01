@@ -14,7 +14,7 @@ public class MailBoxPage extends Page {
     protected static String receivedTime;
     protected List<String> emailTimeList;
     private static final String SENT_OK_URL = "sendmsgok";
-    protected final static By EMAIL_IN_LIST = By.className("js-href b-datalist__item__link");
+    protected final static By EMAIL_IN_LIST = By.xpath("//div[@style='']/div[contains(@class, 'b-datalist_letters')]//a[@class=\"js-href b-datalist__item__link\"]");
 
     public MailBoxPage(WebDriver driver) {
         super(driver);
@@ -56,9 +56,9 @@ public class MailBoxPage extends Page {
         return this;
     }
 
-    public boolean isEmailDeleted() {
+    public boolean isEmailDeletedMoved() {
         try {
-            waitForElementVisible(DELETE_EMAIL_CONFIRM_MESSAGE);
+            waitForElementVisible(DELETE_MOVE_EMAIL_CONFIRM_MESSAGE);
             return true;
         } catch (NoSuchElementException e) {
             return false;

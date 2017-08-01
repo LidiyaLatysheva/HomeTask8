@@ -10,6 +10,7 @@ import org.testng.annotations.AfterTest;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
 
+import java.io.IOException;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -106,6 +107,22 @@ public class SimpleTest {
         Assert.assertTrue(homePage.isHomePage(), CHECK_LOGOUT_MSG);
     }
 
+    /**
+     * Scenario 2:
+     1. Login to the mailbox
+     2. Verify that login is successful
+     3. Create a new mail (fill addressee, subject and body fields (addressee should be yourself))
+     4. Send email
+     5. Click on Inbox (Входящие)
+     6. Check that quantity of emails has increased by one
+     7. Click Delete (Удалить) button
+     8. Check that message "Удалено 1 письмо. Отменить" has appeared
+     9. Refresh page
+     10. Check that amount of emails is same as initially
+     11. Click on Trash (Корзина)
+     12. Check that deleted email is actually in Trash
+     13. Logout
+     */
     @Test
     public void secondTest() {
         /**
@@ -128,33 +145,26 @@ public class SimpleTest {
         MailBoxPage mailBoxPage = composePage.clickSend();
         composePage.waitEmailSent();
         Assert.assertTrue(mailBoxPage.isEmailSent(), CHECK_EMAIL_IS_SENT_MSG);
-        //TODO implement this logic. Currently scipping.
         /**
          * Check that email count is increased by 1
          */
-        /*inboxPage = mailBoxPage.openInbox();
-        List<WebElement> list = driver.findElements(By.xpath("/*//*[@class=\"js-href b-datalist__item__link\"]"));
+        inboxPage = mailBoxPage.openInbox();
         int newEmailCount = inboxPage.setEmailCount();
-        list = driver.findElements(By.xpath("/*//*[@class=\"js-href b-datalist__item__link\"]"));
-        int e=inboxPage.getInitialEmailCount();
-        Assert.assertEquals(newEmailCount - inboxPage.getInitialEmailCount(), 1, CHECK_EMAIL_COUNT_INCREASE_MSG);*/
+        Assert.assertEquals(newEmailCount - inboxPage.getInitialEmailCount(), 1, CHECK_EMAIL_COUNT_INCREASE_MSG);
         /**
          * Check that email is deleted
          */
         inboxPage = mailBoxPage.openInbox();
         inboxPage.selectRecievedEmail();
         inboxPage.clickDelete();
-        //TODO how to catch js elements
-        /*boolean tmp = inboxPage.isEmailDeleted();
-        Assert.assertTrue(tmp);*/
-        //TODO implement this logic. Currently scipping.
+        Assert.assertTrue(inboxPage.isEmailDeletedMoved());
         /**
          * Refresh the page and check that email count hasn't been changed
          */
-        /*int count = inboxPage.setEmailCount();
+        int emailCount = inboxPage.setEmailCount();
         driver.navigate().refresh();
         newEmailCount = inboxPage.setEmailCount();
-        Assert.assertEquals(newEmailCount, count, EMAIL_COUNT_AFTER_REFRESH_MSG);*/
+        Assert.assertEquals(newEmailCount, emailCount, EMAIL_COUNT_AFTER_REFRESH_MSG);
         driver.navigate().refresh();
         /**
          * Open Trash and check that email there
@@ -168,6 +178,25 @@ public class SimpleTest {
         Assert.assertTrue(homePage.isHomePage(), CHECK_LOGOUT_MSG);
     }
 
+    /**
+     * Scenario 3:
+     1. Login to the mailbox
+     2. Verify that login is successful
+     3. Create a new mail (fill addressee, subject and body fields (addressee should be yourself))
+     4. Send email
+     5. Click on Inbox (Входящие)
+     6. Check that quantity of emails is what was previously plus one
+     7. Select email that you just sent in Inbox
+     8. Click Move (Переместить) button
+     9. Select "Trash" (Корзина) option
+     10. Check that message "Письмо перемещено в Корзину. Отменить" has appeared
+     11. Check that amount of emails is same as initially
+     12. Refresh page
+     13. Check that amount of emails is same as initially
+     14. Click on Trash (Корзина)
+     15. Check that trashed email is actually in Trash
+     16. Logout
+     */
     @Test
     public void thirdTest() {
         /**
@@ -191,7 +220,9 @@ public class SimpleTest {
         composePage.waitEmailSent();
         Assert.assertTrue(mailBoxPage.isEmailSent(), CHECK_EMAIL_IS_SENT_MSG);
         //TODO "Check that email count is increased by 1" implement this logic. Currently scipping.
-
+        inboxPage = mailBoxPage.openInbox();
+        int newEmailCount = inboxPage.setEmailCount();
+        Assert.assertEquals(newEmailCount - inboxPage.getInitialEmailCount(), 1, CHECK_EMAIL_COUNT_INCREASE_MSG);
         /**
          * Move email to trash and check it
          */
@@ -199,11 +230,14 @@ public class SimpleTest {
         inboxPage.selectRecievedEmail();
         inboxPage.clickMoveToTrash();
         //TODO check that confirm message appears:how to catch js elements
+        Assert.assertTrue(inboxPage.isEmailDeletedMoved());
         /**
          * Refresh the page and check that email count hasn't been changed
          */
-        //TODO check that email count is the same after refresh : implement this logic. Currently scipping.
+        int emailCount = inboxPage.setEmailCount();
         driver.navigate().refresh();
+        newEmailCount = inboxPage.setEmailCount();
+        Assert.assertEquals(newEmailCount, emailCount, EMAIL_COUNT_AFTER_REFRESH_MSG);
         /**
          * Open Trash and check that email there
          */
@@ -218,7 +252,16 @@ public class SimpleTest {
 
     @AfterTest
     private void closeDeriver() {
-        //driver.close();
         driver.quit();
+        /**
+         * Kill all geckodriver.exe processes
+         */
+        boolean isDebug = java.lang.management.ManagementFactory.getRuntimeMXBean().getInputArguments().toString().indexOf("-agentlib:jdwp") > 0;
+        try {
+            if (isDebug)
+                Runtime.getRuntime().exec("taskkill /F /IM geckodriver.exe");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }
