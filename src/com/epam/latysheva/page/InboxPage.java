@@ -21,12 +21,16 @@ public class InboxPage extends MailBoxPage {
     }
 
     public HomePage logout() {
+        highlightElementOn(LOGOUT_LINK);
         driver.findElement(LOGOUT_LINK).click();
+        highlightElementOff(LOGOUT_LINK);
         return new HomePage(driver);
     }
 
     public ComposePage clickComposeBtn() {
+        highlightElementOn(COMPOSE_BUTTON);
         driver.findElement(COMPOSE_BUTTON).click();
+        highlightElementOff(COMPOSE_BUTTON);
         return new ComposePage(driver);
     }
 
@@ -48,11 +52,13 @@ public class InboxPage extends MailBoxPage {
 
     public InboxPage selectRecievedEmail(){
         String tmp = EMAIL_CHECKBOX;
+        highlightElementOn(By.xpath(tmp));
         driver.findElement(By.xpath(tmp)).click();
+        highlightElementOff(By.xpath(tmp));
         return this;
     }
 
-    public boolean isEmailThere() {
+/*    public boolean isEmailThere() {
         try {
             waitForElementVisible(By.xpath(PART_EMAIL_LOCATOR));
             return true;
@@ -61,7 +67,7 @@ public class InboxPage extends MailBoxPage {
         } catch (TimeoutException e) {
             return false;
         }
-    }
+    }*/
 
 
 }

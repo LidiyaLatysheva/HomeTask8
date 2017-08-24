@@ -2,6 +2,7 @@ package com.epam.latysheva;
 
 
 import com.epam.latysheva.page.*;
+import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.support.ui.WebDriverWait;
@@ -55,6 +56,16 @@ public class SimpleTest {
         driver.manage().timeouts().pageLoadTimeout(25, TimeUnit.SECONDS);
     }
 
+
+    @Test
+    public void justeTest(){
+        HomePage homePage = new HomePage(driver);
+        InboxPage inboxPage = homePage.open().login(LOGIN, PASSWORD);
+        inboxPage.waitForElementEnabled(inboxPage.getCOMPOSE_BUTTON());
+        ComposePage composePage = inboxPage.clickComposeBtn();
+        Assert.assertTrue(composePage.isComposePage(), CHECK_SEND_BTN_PRESENT_FAILED_MSG);
+    }
+
     @Test
     public void firstTest() {
         /**
@@ -67,6 +78,7 @@ public class SimpleTest {
          */
         inboxPage.waitForElementEnabled(inboxPage.getCOMPOSE_BUTTON());
         ComposePage composePage = inboxPage.clickComposeBtn();
+        composePage.waitForElementEnabled(By.xpath("//*[@data-name=\"send\"]"));
         Assert.assertTrue(composePage.isComposePage(), CHECK_SEND_BTN_PRESENT_FAILED_MSG);
         /**
          * Fill in  To, Subject, Body fields,
@@ -219,7 +231,6 @@ public class SimpleTest {
         MailBoxPage mailBoxPage = composePage.clickSend();
         composePage.waitEmailSent();
         Assert.assertTrue(mailBoxPage.isEmailSent(), CHECK_EMAIL_IS_SENT_MSG);
-        //TODO "Check that email count is increased by 1" implement this logic. Currently scipping.
         inboxPage = mailBoxPage.openInbox();
         int newEmailCount = inboxPage.setEmailCount();
         Assert.assertEquals(newEmailCount - inboxPage.getInitialEmailCount(), 1, CHECK_EMAIL_COUNT_INCREASE_MSG);
@@ -229,7 +240,6 @@ public class SimpleTest {
         inboxPage = mailBoxPage.openInbox();
         inboxPage.selectRecievedEmail();
         inboxPage.clickMoveToTrash();
-        //TODO check that confirm message appears:how to catch js elements
         Assert.assertTrue(inboxPage.isEmailDeletedMoved());
         /**
          * Refresh the page and check that email count hasn't been changed
@@ -242,6 +252,11 @@ public class SimpleTest {
          * Open Trash and check that email there
          */
         TrashPage trashPage = inboxPage.openTrash();
+        try {
+            wait(5);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
         Assert.assertTrue(trashPage.isEmailThere());
         /**
          * Logout
@@ -250,12 +265,12 @@ public class SimpleTest {
         Assert.assertTrue(homePage.isHomePage(), CHECK_LOGOUT_MSG);
     }
 
-    @AfterTest
+/*    @AfterTest
     private void closeDeriver() {
         driver.quit();
-        /**
+        *//**
          * Kill all geckodriver.exe processes
-         */
+         *//*
         boolean isDebug = java.lang.management.ManagementFactory.getRuntimeMXBean().getInputArguments().toString().indexOf("-agentlib:jdwp") > 0;
         try {
             if (isDebug)
@@ -263,5 +278,5 @@ public class SimpleTest {
         } catch (IOException e) {
             e.printStackTrace();
         }
-    }
+    }*/
 }

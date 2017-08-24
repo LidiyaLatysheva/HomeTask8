@@ -12,7 +12,7 @@ public class SentsPage extends MailBoxPage {
         super(driver);
     }
 
-    public boolean isEmailThere() {
+/*    public boolean isEmailThere() {
         try {
             waitForElementVisible(By.xpath(PART_EMAIL_LOCATOR));
             return true;
@@ -21,5 +21,5 @@ public class SentsPage extends MailBoxPage {
         } catch (TimeoutException e) {
             return false;
         }
-    }
+    }*/
 }

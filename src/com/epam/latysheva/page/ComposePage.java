@@ -41,7 +41,7 @@ public class ComposePage extends MailBoxPage {
      * Check that Email saved message appears.
      */
     public boolean isSavedToDrafts() {
-        waitForElementVisible(SAVE_STATUS);
+        //waitForElementVisible(SAVE_STATUS);
         String str = driver.findElement(SAVE_STATUS).getText();
         boolean isContained = str.contains(SAVED_TO_DRAFT_MSG);
         /**

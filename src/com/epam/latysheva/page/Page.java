@@ -1,6 +1,7 @@
 package com.epam.latysheva.page;
 
 import org.openqa.selenium.By;
+import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
@@ -71,9 +72,16 @@ public class Page {
     }
 
     public void waitForElementVisible(By locator){
-        locator = By.xpath(".//div[@style=\"\"]//div[@class=\"notify-message__title\"]//span[@class='js-txt _js-title notify-message__title__text notify-message__title__text_ok']");
+        //locator = By.xpath(".//div[@style=\"\"]//div[@class=\"notify-message__title\"]//span[@class='js-txt _js-title notify-message__title__text notify-message__title__text_ok']");
         new WebDriverWait(driver, WAIT_CONST).until(ExpectedConditions.visibilityOfElementLocated(locator));
+    }
 
+    public void highlightElementOn(By locator){
+        ((JavascriptExecutor) driver).executeScript("arguments[0].style.border = '4px solid green'",driver.findElement(locator));
+    }
+
+    public void highlightElementOff(By locator){
+        ((JavascriptExecutor) driver).executeScript("arguments[0].style.border = '0px'",driver.findElement(locator));
     }
 
 }

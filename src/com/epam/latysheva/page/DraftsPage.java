@@ -13,6 +13,7 @@ public class DraftsPage extends MailBoxPage {
         super(driver);
     }
 
+    @Override
     public boolean isEmailThere() {
         try {
             emailLocator = EMAIL + saveTime + "\"]";

@@ -2,6 +2,8 @@ package com.epam.latysheva.page;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.interactions.Actions;
 
 
 public class HomePage extends Page {
@@ -16,12 +18,22 @@ public class HomePage extends Page {
     }
 
     public InboxPage login(String login, String password) {
+        Actions actions = new Actions(driver);
+        WebElement loginField = driver.findElement(LOGIN_FIELD);
+        WebElement passwordField = driver.findElement(PASSWORD_FIELD);
+        WebElement loginButton = driver.findElement(LOGIN_BUTTON);
         waitForElementEnabled(LOGIN_FIELD);
-        driver.findElement(LOGIN_FIELD).sendKeys(login);
+        highlightElementOn(LOGIN_FIELD);
+        actions.sendKeys(loginField,login).build().perform();
+        highlightElementOff(LOGIN_FIELD);
         waitForElementEnabled(PASSWORD_FIELD);
-        driver.findElement(PASSWORD_FIELD).sendKeys(password);
+        highlightElementOn(PASSWORD_FIELD);
+        actions.sendKeys(passwordField,password).build().perform();
+        highlightElementOff(PASSWORD_FIELD);
         waitForElementEnabled(LOGIN_BUTTON);
-        driver.findElement(LOGIN_BUTTON).click();
+        highlightElementOn(LOGIN_BUTTON);
+        actions.click(loginButton).build().perform();
+        highlightElementOff(LOGIN_BUTTON);
         return new InboxPage(driver);
     }
 

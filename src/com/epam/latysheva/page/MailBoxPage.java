@@ -82,4 +82,17 @@ public class MailBoxPage extends Page {
         driver.findElement(TRASH_MENU_ITEM).click();}
         return this;
     }
+
+    public boolean isEmailThere() {
+        try {
+            String str = PART_EMAIL_LOCATOR;
+            //waitForElementVisible(By.xpath(PART_EMAIL_LOCATOR));
+            waitForElementEnabled(By.xpath(PART_EMAIL_LOCATOR));
+            return true;
+        } catch (NoSuchElementException e) {
+            return false;
+        } catch (TimeoutException e) {
+            return false;
+        }
+    }
 }
