@@ -5,6 +5,8 @@ import com.epam.latysheva.page.*;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
+import org.openqa.selenium.remote.DesiredCapabilities;
+import org.openqa.selenium.remote.RemoteWebDriver;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.Assert;
 import org.testng.annotations.AfterTest;
@@ -12,6 +14,8 @@ import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
 
 import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -42,29 +46,30 @@ public class SimpleTest {
     protected static final String EMAIL_COUNT_AFTER_REFRESH_MSG = "FAIL: Email count is different after refresh";
 
     @BeforeTest
-    private void initDriver() {
+    private void initDriver() throws MalformedURLException {
         /**
          * Set System variable webdriver.gecko.driver.
          */
-        System.setProperty(GECKO_DRIVER_SYSTEM_PROPERTY, PATH_TO_GEKODRIVER);
+        //System.setProperty(GECKO_DRIVER_SYSTEM_PROPERTY, PATH_TO_GEKODRIVER);
         /**
          * Initialize webdriver.
          * Set pageLoadTimeout and delete all cookies.
          */
-        driver = new FirefoxDriver();
+        //driver = new FirefoxDriver();
+
+        WebDriver driver = null;
+        try {
+            //driver = new RemoteWebDriver(new URL("http://127.0.0.1:4444/wd/hub"), DesiredCapabilities.firefox());
+            driver = new RemoteWebDriver(new URL("http://127.0.0.1:4444/wd/hub"), DesiredCapabilities.chrome());
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        }
+        driver.manage().timeouts().pageLoadTimeout(15, TimeUnit.SECONDS);
+        driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
+        driver.manage().window().maximize();
         driver.manage().deleteAllCookies();
-        driver.manage().timeouts().pageLoadTimeout(25, TimeUnit.SECONDS);
     }
 
-
-    @Test
-    public void justeTest(){
-        HomePage homePage = new HomePage(driver);
-        InboxPage inboxPage = homePage.open().login(LOGIN, PASSWORD);
-        inboxPage.waitForElementEnabled(inboxPage.getCOMPOSE_BUTTON());
-        ComposePage composePage = inboxPage.clickComposeBtn();
-        Assert.assertTrue(composePage.isComposePage(), CHECK_SEND_BTN_PRESENT_FAILED_MSG);
-    }
 
     @Test
     public void firstTest() {
